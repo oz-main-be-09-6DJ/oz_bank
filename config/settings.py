@@ -80,6 +80,11 @@ DATABASES = {
     }
 }
 
+# drf_spectacular.openapi.AutoSchema: 자동으로 OpenAPI(Swagger) 문서를 생성할 수 있게 해준다.
+# 즉, drf-spectacular이 DRF의 API 엔드포인트를 분석하여 Swagger 문서를 생성할 수 있도록 해준다.
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -105,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
