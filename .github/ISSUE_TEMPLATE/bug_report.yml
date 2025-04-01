@@ -1,0 +1,68 @@
+name: Bug Report
+description: 버그를 작성하려면 이 템플릿을 사용하세요.
+title: "[BUG] 버그 제목 작성"
+labels: [bug]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        버그를 제보해 주셔서 감사합니다! 아래 항목들을 최대한 자세히 작성해 주세요.
+
+  - type: input
+    id: environment
+    attributes:
+      label: 환경 정보
+      description: 실행 중인 브라우저, 운영체제, Node.js 버전 등
+      placeholder: 예) Windows 11, Chrome 123, Node.js 20.2.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 버그 재현 단계
+      description: 버그를 재현하기 위한 순서를 단계별로 적어주세요.
+      placeholder: |
+        1. 로그인 버튼 클릭
+        2. 팝업 열기
+        3. 에러 발생
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대한 결과
+      description: 원래 어떤 결과가 나와야 했나요?
+      placeholder: 예) 팝업 창이 정상적으로 열려야 함
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 결과
+      description: 실제로 어떤 문제가 발생했나요?
+      placeholder: 예) "에러가 발생했습니다" 메시지 출력
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 스크린샷 및 로그
+      description: 가능하다면 스크린샷이나 콘솔 로그 등을 첨부해 주세요.
+      placeholder: drag & drop or paste here
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 심각도
+      options:
+        - 경미함 (기능에 큰 영향 없음)
+        - 보통 (기능 일부 사용 불가)
+        - 심각함 (전체 기능 불가 또는 크리티컬 에러)
+    validations:
+      required: true
