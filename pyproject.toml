@@ -1,18 +1,27 @@
 [project]
-name = "oz-bank"
+name = "config" # startProject 로 설정한 이름을 넣어줌.
 version = "0.1.0"
 description = ""
 authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
-readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "django (>=5.1.7,<6.0.0)",
-    "djangorestframework (>=3.16.0,<4.0.0)"
-]
 
+# 모든 환경에서 필요한 기본 패키지
+[tool.poetry.dependencies]
+python = "^3.13"
+django = ">=5.1.7,<6.0.0"
+djangorestframework = ">=3.16.0,<4.0.0"
+psycopg = {extras = ["binary"], version = "^3.2.6"}
+python-dotenv = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+# 개발 환경에서만 필요한 패키지
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.1"
+drf-spectacular = "^0.28.0"
+

@@ -1,0 +1,82 @@
+name: Code Quality Checks
+
+# 트리거 이벤트 부분
+# 코드가 푸시되거나 풀 리퀘스트가 생성될 때 CI가 실행됩니다.
+on:
+  push:
+    branches:
+      - feature/gy_init
+
+jobs:
+  ci:
+    # 가장 최신버젼의 ubuntu를 OS 환경으로 설정합니다.
+    runs-on: ubuntu-latest
+    # services 키워드를 사용하여 PostgreSQL 서비스를 설정
+    services:
+      db:
+        image: postgres:14
+        ports:
+          - 5432:5432
+        # Github Secrets에서 가져와서 env로 등록, Postgres 데이터 베이스 연결 설정
+        env:
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        # 옵션으로 postgres의 연결 상태를 확인. 10초 단위로 5번 재시도. 5초간 기다림.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    # CI 환경에서 코드를 체크아웃합니다.
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # CI 환경에서 사용할 파이썬 버젼을 지정합니다.
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13.2'
+
+      # Poetry를 설치합니다.
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+      # Poetry를 사용하여 의존성 패키지들을 설치합니다.
+      - name: Install Packages & Libraries
+        run: |
+          poetry install
+      # isort를 사용하여 import 구문의 정렬 순서를 체크합니다.
+      - name: Run isort (Import sorting)
+        run: |
+          poetry run isort .
+      # black을 사용하여 PEP8 코드스타일을 준수했는지 체크합니다.
+      - name: Run black (Code formatting)
+        run: |
+          poetry run black .
+      # DB 환경변수 .env 생성/저장
+      - name: Run PostgreSQL setup
+        run: |
+          echo "POSTGRES_DB=${{ secrets.DB_NAME }}" > .env
+          echo "POSTGRES_USER=${{ secrets.DB_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+
+      # db 연결을 테스트
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p ${{ secrets.DB_PORT }} -U ${{ secrets.DB_USER }}; do
+            sleep 1
+          done
+      # 정상적인 db연결을 확인했으니 마이그레이션 수행
+      - name: Run Django Migration
+        run: |
+          poetry run python manage.py makemigrations 
+          poetry run python manage.py migrate
+      # check : django 프로젝트의 설정 및 앱 구성에 문제가 없는지 점검
+      - name: Test python project
+        run: |
+          poetry run python manage.py test
