@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
@@ -18,4 +18,6 @@ urlpatterns = [
     # redoc/ 경로에서 Redoc 스타일 API 문서를 제공하는 뷰
     # Redoc은 Swagger와 비슷하지만, 조금 더 깔끔하고 정리된 문서 페이지 제공
     # http://localhost:8000/redoc/에 접속하면 Redoc 기반의 API 문서 페이지 제공
+
+    path('tests/', include('tests.urls')),  # tests 앱의 urls.py를 포함
 ]
