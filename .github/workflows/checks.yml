@@ -5,7 +5,7 @@ name: Code Quality Checks
 on:
   push:
     branches:
-      - feature/gy_init
+      - feature/db_config
 
 jobs:
   ci:
