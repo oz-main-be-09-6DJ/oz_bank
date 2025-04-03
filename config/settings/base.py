@@ -134,3 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SIMPLE_JWT={
     "ACCESS_TOKEN_LIFETIME":timedelta(days=7) #JWT토큰 만료 시간 7일
 }
+
+# OAuth (naver)
+NAVER_CLIENT_ID = SECRET["naver"]["client_id"]
+NAVER_SECRET = SECRET["naver"]["secret"]
