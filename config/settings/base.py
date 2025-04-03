@@ -31,9 +31,9 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # third_party_apps
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
+    'rest_framework',
 ]
 
 APP_APPS = [
