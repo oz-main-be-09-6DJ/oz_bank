@@ -138,5 +138,6 @@ SIMPLE_JWT={
 }
 
 # OAuth (naver)
-NAVER_CLIENT_ID = SECRET["naver"]["client_id"]
-NAVER_SECRET = SECRET["naver"]["secret"]
+# secret.json이 없거나 키가 없을 경우를 대비
+NAVER_CLIENT_ID = SECRET.get("naver", {}).get("client_id", "")
+NAVER_SECRET = SECRET.get("naver", {}).get("secret", "")
