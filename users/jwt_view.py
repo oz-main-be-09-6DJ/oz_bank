@@ -1,6 +1,18 @@
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView,RetrieveUpdateAPIView
 from users.models import CustomUser
-from users.serializers import UserUpdateMeSerializer,UserSignUpSerializer,UserReadMeSerializer
+from users.serializers import UserSignUpSerializer,UserUpdateMeSerializer,UserReadMeSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 class UserSignUpAPIView(CreateAPIView):
     queryset=CustomUser.objects.all()
     serializer_class=UserSignUpSerializer
+class UserMeAPIView(RetrieveUpdateAPIView):
+    permission_classes=[IsAuthenticated]
+    authentication_classes=[JWTAuthentication]
+    def get_object(self):
+        return self.request.user
+    def get_serializer_class(self):
+        if self.request.method=='GET':
+            return UserReadMeSerializer
+        elif self.request.method=='PATCH':
+            return UserUpdateMeSerializer
