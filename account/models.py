@@ -21,6 +21,6 @@ class Account(models.Model):
     @property
     def account_type_name(self):
         return self.get_account_type_display()
-    
+
     def __str__(self):
         return f'[{self.get_account_type_display()}]{self.account_number}({self.get_bank_code_display()})'

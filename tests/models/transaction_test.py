@@ -1,5 +1,4 @@
 from django.test import TestCase  # Django의 테스트 프레임워크
-
 from account.models import Account
 from transaction.models import Transaction
 from users.models import CustomUser
