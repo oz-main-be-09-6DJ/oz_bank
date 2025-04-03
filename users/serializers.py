@@ -5,21 +5,15 @@ from django.core.exceptions import ValidationError
 from users.models import CustomUser,Notification
 
 class UserSignUpSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
-        model=CustomUser
-        fields = [
-            "email",
-            "name",
-            "nickname",
-            "phone_number",
-            "password",
-            "type",
-            "notification",
-        ]
+        model = CustomUser
+        fields = ["email", "name", "nickname", "phone_number", "password"]
         extra_kwargs={
             'password':{'write_only':True}
         }
-        
+
     def validate(self, data):
         user=CustomUser(**data)
         errors=dict()
@@ -28,12 +22,9 @@ class UserSignUpSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             raise serializers.ValidationError(list(e.messages))
         return super().validate(data)
-    
     def create(self, validated_data):
-        validated_data["password"] = make_password(validated_data["password"])
-        return super().create(validated_data)
-    
-    
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
     
 class UserReadMeSerializer(serializers.ModelSerializer):
     class Meta:

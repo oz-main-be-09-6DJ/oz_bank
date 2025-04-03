@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils.crypto import get_random_string
 
 
 # User 모델을 관리하는 Manager (create_user, create_superuser()를 직접 구현하기 위해)
@@ -48,6 +49,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+class EmailVerificationToken(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="email_token")
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def generate_token(self):
+        self.token = get_random_string(length=64)
+        self.save()
 
 # 특정 사용자(CustomUser)의 알림을 저장하고 관리할 수 있음
 class Notification(models.Model):
