@@ -1,8 +1,9 @@
 from decimal import Decimal
-from django.db import IntegrityError
 from django.test import TestCase
 from account.models import Account
 from users.models import CustomUser
+
+
 # Create your tests here.
 class AccountModelTestCase(TestCase):
     def setUp(self):
