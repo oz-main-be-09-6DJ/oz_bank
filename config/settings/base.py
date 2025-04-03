@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-&-0k^p0-7u@x*r3=7vi9eh7m=99e(o_tpos$!f_9a7cg)zbbz_'
 
-# Application definition
+# Django 기본 내장 앱들
 DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,8 +34,13 @@ DJANGO_APPS = [
 
 APP_APPS = [
     'tests',
+    'users',
 ]
 
+# Django에게 기본 User 모델 대신 CustomUser 사용하도록 설정
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# 최종적으로 Django가 로드할 앱 리스트
 INSTALLED_APPS = DJANGO_APPS + APP_APPS
 
 MIDDLEWARE = [
