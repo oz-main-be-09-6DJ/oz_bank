@@ -7,21 +7,29 @@ authors = [
 ]
 requires-python = ">=3.13"
 
-# 모든 환경에서 필요한 기본 패키지
-[tool.poetry.dependencies]
-python = "^3.13"
+[tool.poetry.dependencies] # 기본 환경
 django = ">=5.1.7,<6.0.0"
 djangorestframework = ">=3.16.0,<4.0.0"
-psycopg = {extras = ["binary"], version = "^3.2.6"}
+python-decouple = "^3.8"
+psycopg = "^3.2.6"
 python-dotenv = "^1.1.0"
+
+[tool.poetry.group.prod.dependencies] # 배포 환경
+isort = "^6.0.1"    # import를 알파벳 순으로 자동 정렬
+black = "^25.1.0"   # 코드 포매팅 (PEP8 기준)
+
+[tool.poetry.group.dev.dependencies] # 개발 환경
+drf-spectacular = "^0.28.0" # DRF용 API 문서 자동 생성 (OPENAPI 3.0 기반)
+ipython = "^9.0.2"
+django-extensions = "^3.2.3"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-# 개발 환경에서만 필요한 패키지
-[tool.poetry.group.dev.dependencies]
-black = "^25.1.0"
-isort = "^6.0.1"
-drf-spectacular = "^0.28.0"
+[tool.isort]
+profile = "black"
+combine_as_imports = true  # ← 이건 추가해도 OK
 
+[tool.black]
+line-length = 88
