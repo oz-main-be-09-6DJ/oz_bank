@@ -1,8 +1,9 @@
 from decimal import Decimal
-from django.db import IntegrityError
 from django.test import TestCase
 from account.models import Account
 from users.models import CustomUser
+
+
 # Create your tests here.
 class AccountModelTestCase(TestCase):
     def setUp(self):
@@ -56,7 +57,7 @@ class AccountModelTestCase(TestCase):
         user2_account_list=Account.objects.filter(user=self.user2)
         self.assertEqual(user1_account_list.count(),2)
         self.assertEqual(user2_account_list.count(),1)
-        
+
     def test_account_balance(self):#잔액 입력 한거 안한거 비교
         no_balance_account=Account.objects.get(account_number='1')
         balace_account=Account.objects.get(account_number='3')
@@ -70,7 +71,7 @@ class AccountModelTestCase(TestCase):
         self.assertEqual(bank_code_account.bank_code,'001')
         self.assertEqual(no_bank_code_account.bank_name,'알수없음')
         self.assertEqual(bank_code_account.bank_name,'한국은행')
-        
+
     def test_account_type(self):#계좌타입 이름 체크
         checking_account=Account.objects.filter(account_type='CHECKING')
         self.assertEqual(checking_account.count(),2)
