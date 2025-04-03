@@ -20,7 +20,8 @@ NAVER_PROFILE_URL = 'https://openapi.naver.com/v1/nid/me'
 
 # 네이버 로그인 버튼 및 로그인 성공 화면
 def naver_login_page(request):
-    return render(request, 'oauth_login.html')
+    nickname = request.GET.get('nickname')  # 로그인 성공 시 표시할 nickname
+    return render(request, 'oauth_login.html', {'nickname': nickname})
 
 # 네이버 인증서버로 리디렉션하는 뷰
 class NaverLoginRedirectView(RedirectView):
