@@ -12,7 +12,15 @@ class Account(models.Model):
     created_at = models.DateTimeField(verbose_name='Created Date', auto_now_add=True)
     deleted_at = models.DateTimeField(verbose_name='Deleted Date', null=True, blank=True)
     updated_at = models.DateTimeField(verbose_name='Updated Date', auto_now=True)
-    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    
+    @property
+    def bank_name(self):
+        return self.get_bank_code_display()
+    
+    @property
+    def account_type_name(self):
+        return self.get_account_type_display()
     
     def __str__(self):
         return f'[{self.get_account_type_display()}]{self.account_number}({self.get_bank_code_display()})'
