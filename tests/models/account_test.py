@@ -63,7 +63,7 @@ class AccountModelTestCase(TestCase):
         balace_account=Account.objects.get(account_number='3')
         self.assertEqual(no_balance_account.balance,0)
         self.assertEqual(balace_account.balance,Decimal('1200.51'))
-
+        
     def test_bank_code(self):#은행코드 기본값 확인 및 은행코드 이름 체크
         no_bank_code_account=Account.objects.get(account_number='2')
         bank_code_account=Account.objects.get(account_number='1')
