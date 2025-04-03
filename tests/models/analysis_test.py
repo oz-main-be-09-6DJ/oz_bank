@@ -12,10 +12,10 @@ class AnalysisModelTestCase(TestCase):
         # User.objects.filter(email="analysis_test3@test.com").delete()
 
         user = User.objects.create(
-            email="analysis_test3@test.com",
+            email="analysis_test4324234233@test.com",
             name="박유진3",
-            nickname="analysis_test3",
-            phone_number="01065484412",
+            nickname="analysis_test4324234233",
+            phone_number="01185695541",
             password="qwer1234",
         )
 
@@ -48,4 +48,4 @@ class AnalysisModelTestCase(TestCase):
         analysis = Analysis.objects.first()
         user = analysis.user
 
-        self.assertEqual(user.email, 'analysis_test3@test.com')
+        self.assertEqual(user.email, 'analysis_test4324234233@test.com')
