@@ -13,11 +13,11 @@ class Account(models.Model):
     deleted_at = models.DateTimeField(verbose_name='Deleted Date', null=True, blank=True)
     updated_at = models.DateTimeField(verbose_name='Updated Date', auto_now=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    
+
     @property
     def bank_name(self):
         return self.get_bank_code_display()
-    
+
     @property
     def account_type_name(self):
         return self.get_account_type_display()
