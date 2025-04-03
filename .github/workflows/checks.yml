@@ -5,7 +5,7 @@ name: Code Quality Checks
 on:
   push:
     branches:
-      - feature/gy_init
+      - feature/db_config
 
 jobs:
   ci:
@@ -66,16 +66,16 @@ jobs:
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
 
       # db 연결을 테스트
-      - name: Wait for PostgreSQL
+      - name: Wait for DB
         run: |
-          until pg_isready -h localhost -p ${{ secrets.DB_PORT }} -U ${{ secrets.DB_USER }}; do
-            sleep 1
-          done
+          poetry run python manage.py wait_for_db
+
       # 정상적인 db연결을 확인했으니 마이그레이션 수행
       - name: Run Django Migration
         run: |
           poetry run python manage.py makemigrations 
           poetry run python manage.py migrate
+
       # check : django 프로젝트의 설정 및 앱 구성에 문제가 없는지 점검
       - name: Test python project
         run: |
