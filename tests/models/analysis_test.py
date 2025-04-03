@@ -1,15 +1,12 @@
 import datetime
-from unittest import TestCase
-from django.contrib.auth import get_user_model
-
+from django.test import TestCase  # Django의 테스트 프레임워크
 from analysis.models import Analysis
-
-User = get_user_model()
+from users.models import CustomUser
 
 
 class AnalysisModelTestCase(TestCase):
     def setUp(self):
-        user = User.objects.create(
+        user = CustomUser.objects.create(
             email="analysis_test3@test.com",
             name="박유진3",
             nickname="analysis_test3",

@@ -1,14 +1,13 @@
-from unittest import TestCase
-from django.contrib.auth import get_user_model
+from django.test import TestCase  # Django의 테스트 프레임워크
 
-from transaction.models import Transaction
 from account.models import Account
+from transaction.models import Transaction
+from users.models import CustomUser
 
-User = get_user_model()
 
 class TransactionModelTestCase(TestCase):
     def setUp(self):
-        user = User.objects.create(
+        user = CustomUser.objects.create(
             email="transaction_test3@test.com",
             name="박유진3",
             nickname="transaction_test3",
@@ -23,7 +22,7 @@ class TransactionModelTestCase(TestCase):
         )
 
         Transaction.objects.create(
-            trader=account.user,
+            trader=123,
             transaction_amount=10000,
             transaction_balance=20000,
             transaction_details="관리비 입금",
