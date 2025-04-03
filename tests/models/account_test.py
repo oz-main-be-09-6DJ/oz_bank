@@ -57,13 +57,13 @@ class AccountModelTestCase(TestCase):
         user2_account_list=Account.objects.filter(user=self.user2)
         self.assertEqual(user1_account_list.count(),2)
         self.assertEqual(user2_account_list.count(),1)
-        
+
     def test_account_balance(self):#잔액 입력 한거 안한거 비교
         no_balance_account=Account.objects.get(account_number='1')
         balace_account=Account.objects.get(account_number='3')
         self.assertEqual(no_balance_account.balance,0)
         self.assertEqual(balace_account.balance,Decimal('1200.51'))
-        
+
     def test_bank_code(self):#은행코드 기본값 확인 및 은행코드 이름 체크
         no_bank_code_account=Account.objects.get(account_number='2')
         bank_code_account=Account.objects.get(account_number='1')
@@ -71,7 +71,7 @@ class AccountModelTestCase(TestCase):
         self.assertEqual(bank_code_account.bank_code,'001')
         self.assertEqual(no_bank_code_account.bank_name,'알수없음')
         self.assertEqual(bank_code_account.bank_name,'한국은행')
-        
+
     def test_account_type(self):#계좌타입 이름 체크
         checking_account=Account.objects.filter(account_type='CHECKING')
         self.assertEqual(checking_account.count(),2)
