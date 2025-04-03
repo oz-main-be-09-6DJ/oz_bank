@@ -10,10 +10,10 @@ User = get_user_model()
 class AnalysisModelTestCase(TestCase):
     def setUp(self):
         user = User.objects.create(
-            email="test@test.com",
-            name="박유진",
-            nickname="test1",
-            phone_number="01012345678",
+            email="analysis_test3@test.com",
+            name="박유진3",
+            nickname="analysis_test3",
+            phone_number="01065484412",
             password="qwer1234",
         )
 
@@ -46,4 +46,4 @@ class AnalysisModelTestCase(TestCase):
         analysis = Analysis.objects.first()
         user = analysis.user
 
-        self.assertEqual(user.email, 'test@test.com')
+        self.assertEqual(user.email, 'analysis_test3@test.com')

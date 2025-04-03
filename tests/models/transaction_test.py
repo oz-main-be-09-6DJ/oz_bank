@@ -9,20 +9,21 @@ User = get_user_model()
 class TransactionModelTestCase(TestCase):
     def setUp(self):
         user = User.objects.create(
-            email="test2@test.com",
-            name="박유진2",
-            nickname="test2",
-            phone_number="01056781234",
+            email="transaction_test3@test.com",
+            name="박유진3",
+            nickname="transaction_test3",
+            phone_number="01011112222",
             password="qwer1234",
         )
 
         account = Account.objects.create(
-            account_number='987654321',
+            account_number='11223344',
             account_type="CHECKING",
             user=user,
         )
 
         Transaction.objects.create(
+            trader=account.user,
             transaction_amount=10000,
             transaction_balance=20000,
             transaction_details="관리비 입금",
@@ -52,5 +53,5 @@ class TransactionModelTestCase(TestCase):
         account = transaction.account
         user = account.user
 
-        self.assertEqual(account.account_number, '987654321')
-        self.assertEqual(user.email, 'test2@test.com')
+        self.assertEqual(account.account_number, '11223344')
+        self.assertEqual(user.email, 'transaction_test3@test.com')
