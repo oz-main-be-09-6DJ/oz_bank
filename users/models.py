@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 
-# User 모델을 관리하는 Manager
+# User 모델을 관리하는 Manager (create_user, create_superuser()를 직접 구현하기 위해)
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
