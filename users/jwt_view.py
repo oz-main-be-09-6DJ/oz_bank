@@ -1,10 +1,8 @@
 from rest_framework.generics import CreateAPIView,RetrieveUpdateAPIView
-from users.models import CustomUser
 from users.serializers import UserSignUpSerializer,UserUpdateMeSerializer,UserReadMeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 class UserSignUpAPIView(CreateAPIView):
-    queryset=CustomUser.objects.all()
     serializer_class=UserSignUpSerializer
 class UserMeAPIView(RetrieveUpdateAPIView):
     permission_classes=[IsAuthenticated]

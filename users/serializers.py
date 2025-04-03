@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from users.models import CustomUser,Notification
 
 class UserSignUpSerializer(serializers.ModelSerializer):
@@ -14,10 +16,24 @@ class UserSignUpSerializer(serializers.ModelSerializer):
             "type",
             "notification",
         ]
+        extra_kwargs={
+            'password':{'write_only':True}
+        }
         
+    def validate(self, data):
+        user=CustomUser(**data)
+        errors=dict()
+        try:
+            validate_password(password=data['password'],user=user)
+        except ValidationError as e:
+            raise serializers.ValidationError(list(e.messages))
+        return super().validate(data)
+    
     def create(self, validated_data):
         validated_data["password"] = make_password(validated_data["password"])
         return super().create(validated_data)
+    
+    
     
 class UserReadMeSerializer(serializers.ModelSerializer):
     class Meta:
