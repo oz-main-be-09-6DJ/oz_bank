@@ -10,15 +10,17 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ["email", "name", "nickname", "phone_number", "password"]
-        extra_kwargs={
-            'password':{'write_only':True}
+        extra_kwargs = {
+            'password': {'write_only': True}
         }
 
+    # AUTH_PASSWORD_VALIDATORS 과 관련된 로직을 읽기 위한 메서드이며,
+    # validate_password(password=data['password'], user=user) 로 패스워드 유효성 검사
     def validate(self, data):
-        user=CustomUser(**data)
-        errors=dict()
+        user = CustomUser(**data)
+        errors = dict()
         try:
-            validate_password(password=data['password'],user=user)
+            validate_password(password=data['password'], user=user)
         except ValidationError as e:
             raise serializers.ValidationError(list(e.messages))
         return super().validate(data)
