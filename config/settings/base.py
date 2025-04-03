@@ -35,6 +35,8 @@ DJANGO_APPS = [
 APP_APPS = [
     'tests',
     'users',
+    'transaction',
+    'analysis',
 ]
 
 # Django에게 기본 User 모델 대신 CustomUser 사용하도록 설정
