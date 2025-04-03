@@ -31,6 +31,9 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # third_party_apps
+    'rest_framework_simplejwt',
 ]
 
 APP_APPS = [
@@ -55,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'rest_framework_simplejwt',
 ]
 
 TEMPLATES = [
