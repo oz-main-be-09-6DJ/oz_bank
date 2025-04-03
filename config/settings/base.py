@@ -33,7 +33,9 @@ DJANGO_APPS = [
 ]
 
 APP_APPS = [
-    'tests','users','account'
+    'tests',
+    'users',
+    'account',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + APP_APPS
