@@ -33,7 +33,6 @@ DJANGO_APPS = [
 ]
 
 APP_APPS = [
-    'tests',
     'users',
     'transaction',
     'analysis',
