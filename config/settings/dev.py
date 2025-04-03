@@ -23,4 +23,10 @@ ROOT_URLCONF = 'config.urls.urls_dev'
 # 즉, drf-spectacular이 DRF의 API 엔드포인트를 분석하여 Swagger 문서를 생성할 수 있도록 해준다.
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'PAGE_SIZE':10,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
 }
