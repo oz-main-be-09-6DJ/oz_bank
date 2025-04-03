@@ -19,7 +19,7 @@ class Account(models.Model):
     @property
     def bank_name(self):
         return self.get_bank_code_display()
-
+    
     @property
     def account_type_name(self):
         return self.get_account_type_display()
