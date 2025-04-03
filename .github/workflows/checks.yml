@@ -69,7 +69,7 @@ jobs:
       - name: Wait for DB
         run: |
           poetry run python manage.py wait_for_db
-          
+
       # 정상적인 db연결을 확인했으니 마이그레이션 수행
       - name: Run Django Migration
         run: |
