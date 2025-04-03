@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.db import models
 from utils.constants import BANK_CODES,ACCOUNT_TYPE
+
 User=get_user_model()
 
 class Account(models.Model):

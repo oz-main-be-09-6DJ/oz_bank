@@ -1,14 +1,15 @@
-from unittest import TestCase
+from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from transaction.models import Transaction
 from account.models import Account
+from users.models import CustomUser
 
-User = get_user_model()
+# User = get_user_model()
 
 class TransactionModelTestCase(TestCase):
     def setUp(self):
-        user = User.objects.create(
+        user = CustomUser.objects.create(
             email="transaction_test3549522145@test.com",
             name="박유진3",
             nickname="transaction_test3549522145",

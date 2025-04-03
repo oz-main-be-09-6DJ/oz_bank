@@ -1,17 +1,17 @@
 import datetime
-from unittest import TestCase
 from django.contrib.auth import get_user_model
-
+from django.test import TestCase
 from analysis.models import Analysis
+from users.models import CustomUser
 
-User = get_user_model()
 
+# User = get_user_model()
 
 class AnalysisModelTestCase(TestCase):
     def setUp(self):
         # User.objects.filter(email="analysis_test3@test.com").delete()
 
-        user = User.objects.create(
+        user = CustomUser.objects.create(
             email="analysis_test4324234233@test.com",
             name="박유진3",
             nickname="analysis_test4324234233",
