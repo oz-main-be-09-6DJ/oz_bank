@@ -15,16 +15,22 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# 프로젝트 루트 경로
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 print("BASE_DIR : ", BASE_DIR)
 
-try:
-    with open(BASE_DIR / '.config_secret' / 'secret.json') as f:
-        config_secret_str = f.read()
-        SECRET = json.loads(config_secret_str)
-except FileNotFoundError:
-    print("⚠️ secret.json not found. Using empty SECRET for testing environment.")
+# secret.json 로드
+SECRET = {}
+secret_path = BASE_DIR / '.config_secret' / 'secret.json'
+
+if secret_path.exists():
+    try:
+        with open(secret_path) as f:
+            SECRET = json.load(f)
+    except json.JSONDecodeError:
+        print("⚠️ secret.json 파일이 있지만 JSON 형식이 올바르지 않습니다.")
+else:
+    print("⚠️ secret.json 파일이 존재하지 않습니다. 테스트 환경 또는 기본 설정이 사용됩니다.")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
