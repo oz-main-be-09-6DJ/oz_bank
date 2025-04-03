@@ -1,4 +1,5 @@
-![Copy of 6dj_bank](https://github.com/user-attachments/assets/a4ed9409-4bd0-456e-9dba-1bb3d844bd63)
+![6dj_bank](https://github.com/user-attachments/assets/cdf4a20f-c817-4aaf-b45c-149f4f8f33d9)
+
 
 # 📌 Database Schema
 
@@ -97,3 +98,7 @@
    - 하나의 계좌(Account)에는 여러 개의 거래 내역(Transaction History)이 존재할 수 있음.  
    - `id2`가 `transaction_history` 테이블의 Foreign Key.  
 
+---
+
+## ✅ Model을 바탕으로 테스트코드 실행 결과
+![스크린샷 2025-04-03 오후 8 31 13](https://github.com/user-attachments/assets/24e261b1-d1e9-4fd3-9925-eb0e04435ac8)
