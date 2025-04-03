@@ -19,10 +19,12 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 print("BASE_DIR : ", BASE_DIR)
 
-with open(BASE_DIR / '.config_secret' / 'secret.json') as f:
-    config_secret_str = f.read()
-
-SECRET = json.loads(config_secret_str)
+try:
+    with open(BASE_DIR / '.config_secret' / 'secret.json') as f:
+        config_secret_str = f.read()
+        SECRET = json.loads(config_secret_str)
+except FileNotFoundError:
+    print("⚠️ secret.json not found. Using empty SECRET for testing environment.")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
