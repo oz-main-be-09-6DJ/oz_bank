@@ -1,5 +1,6 @@
 from django.db import models
 from utils.constants import TRANSACTION_TYPE,TRANSACTION_METHOD
+from account.models import Account
 
 
 class Transaction(models.Model):
@@ -10,6 +11,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(null=False, choices=TRANSACTION_TYPE)
     transaction_method = models.CharField(null=False, choices=TRANSACTION_METHOD)
     created_date = models.DateTimeField(auto_now_add=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transactions')
 
     def __str__(self):
         return f"{self.get_type_display()} - {self.transaction_amount}원"
