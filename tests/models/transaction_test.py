@@ -23,7 +23,7 @@ class TransactionModelTestCase(TestCase):
         )
 
         Transaction.objects.create(
-            trader=account.user,
+            trader=999,
             transaction_amount=10000,
             transaction_balance=20000,
             transaction_details="관리비 입금",

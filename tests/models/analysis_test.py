@@ -9,6 +9,8 @@ User = get_user_model()
 
 class AnalysisModelTestCase(TestCase):
     def setUp(self):
+        # User.objects.filter(email="analysis_test3@test.com").delete()
+
         user = User.objects.create(
             email="analysis_test3@test.com",
             name="박유진3",
