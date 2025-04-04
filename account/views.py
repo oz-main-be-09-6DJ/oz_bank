@@ -9,7 +9,7 @@ from rest_framework.response import Response
 class AccountListCreateAPIView(ListCreateAPIView):#계좌 생성 API (로그인한 사용자만 가능)
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
-        return Account.objects.filter(user=self.request.user)  # 본인 계좌만 조회
+        return Account.objects.filter(user=self.request.user).order_by("id")  # 본인 계좌만 조회
 
     def get_serializer_class(self):
         if self.request.method == 'POST':

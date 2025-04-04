@@ -59,10 +59,10 @@ class AccountModelTestCase(TestCase):
         self.assertEqual(user2_account_list.count(),1)
 
     def test_account_balance(self):#잔액 입력 한거 안한거 비교
-        no_balance_account=Account.objects.get(account_number='1')
-        balace_account=Account.objects.get(account_number='3')
-        self.assertEqual(no_balance_account.balance,0)
-        self.assertEqual(balace_account.balance,Decimal('1200.51'))
+        no_balance_account = Account.objects.get(account_number='1')
+        balance_account = Account.objects.get(account_number='3')
+        self.assertEqual(no_balance_account.balance, 0)
+        self.assertEqual(balance_account.balance, Decimal('1200.51'))
         
     def test_bank_code(self):#은행코드 기본값 확인 및 은행코드 이름 체크
         no_bank_code_account=Account.objects.get(account_number='2')
@@ -78,3 +78,74 @@ class AccountModelTestCase(TestCase):
         checking_account=checking_account.first()
         loan_account=Account.objects.filter(account_type='LOAN').first()
         self.assertEqual(loan_account.account_type_name,'대출')
+
+from rest_framework.test import APIClient
+from django.urls import reverse
+from rest_framework import status
+class AccountAPITestCase(TestCase):
+    def setUp(self):
+        Account.objects.all().delete()
+        self.client = APIClient()
+        self.user = CustomUser.objects.create_user(#테스트 용 사용자 생성
+            email="testuser@example.com",
+            password="securepassword123",
+            name="Test User",
+            nickname="Tester",
+            phone_number="010-1234-5678"
+        )
+        self.client.force_authenticate(user=self.user)#로그인 후 인증 토큰 설정
+        self.account = Account.objects.create(# 테스트용 계좌 생성
+            user=self.user,
+            account_number="12345678",
+            bank_code="001",
+            account_type="CHECKING",
+            balance=10000.00
+        )
+        self.create_url = reverse("account_api:list_create")
+        self.detail_url = reverse("account_api:detail", kwargs={"pk": self.account.id})
+        
+    def test_create_account(self):#POST:계좌 생성 테스트
+        data = {
+            "account_number": "87654321",
+            "bank_code": "002",
+            "account_type": "SAVING",
+            "balance": "5000.00"
+        }
+        response = self.client.post(self.create_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["account_number"], "87654321")
+        self.assertEqual(response.data["bank_code"], "002")
+        self.assertEqual(response.data["balance"], "5000.00")
+        
+    def test_get_account_list(self):#GET:로그인한 사용자의 계좌 목록 조회 테스트
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["account_number"], self.account.account_number)
+        
+    def test_update_account_balance(self):#PATCH:계좌 잔액 업데이트 테스트 (balance만 수정 가능)
+        data = {"balance": "20000.00"}
+        response = self.client.patch(self.detail_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["balance"], "20000.00")
+        
+    def test_delete_account(self):#DELETE:계좌 삭제 테스트
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Account.objects.filter(id=self.account.id).exists())
+    
+    def test_cannot_access_other_user_account(self):#타사용자 계좌에 접근 불가 테스트
+        other_user = CustomUser.objects.create_user(
+        email="otheruser@example.com",
+        password="password123"
+        )
+        other_account = Account.objects.create(
+            user=other_user,
+            account_number="99999999",
+            bank_code="003",
+            account_type="LOAN",
+            balance=30000.00
+        )
+        other_detail_url = reverse("account_api:detail", kwargs={"pk": other_account.id})
+        response = self.client.get(other_detail_url)
+        print("✅ 다른 사용자 계좌 접근 응답 코드:", response.status_code)  # 디버깅 로그 추가
+        self.assertIn(response.status_code, [status.HTTP_403_FORBIDDEN, status.HTTP_404_NOT_FOUND])
