@@ -1,8 +1,11 @@
 from django.test import TestCase  # Django의 테스트 프레임워크
 from users.models import CustomUser  # User 모델을 가져옴
 from django.utils import timezone
-
-
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APIClient
+from users.models import CustomUser, EmailVerificationToken
+#CustomUser model 테스트
 class TestCustomUserModel(TestCase):
     """CustomUser 모델의 동작을 검증하는 테스트"""
 
@@ -60,3 +63,61 @@ class TestCustomUserModel(TestCase):
 
         user = CustomUser.objects.get(email="test@example.com")
         self.assertTrue(user.authentication)  # 변경된 값 확인
+        
+#회원가입,이메일 인증,로그인token발급,로그아웃refresh token blacklist등록,회원정보 수정/삭제 테스트
+class UserSignUpAPIView_VerifyEmailView_TestCase(TestCase):
+    def setUp(self):
+        # user_data 정의
+        self.client = APIClient()  # APIClient로 변경
+        self.user_data = {
+            'email': 'testuser@example.com',
+            'password': 'securepassword123',
+            'name': 'Test User',
+            'nickname': 'Tester',
+            'phone_number': '010-1234-5678',
+        }
+        # 기존의 모든 이메일 인증 토큰을 삭제
+        EmailVerificationToken.objects.all().delete()
+        
+        # 사용자 및 토큰 생성
+        self.user = CustomUser.objects.create_user(**self.user_data)
+        self.token = EmailVerificationToken.objects.create(user=self.user)
+    
+    
+    def test_login(self):
+        """로그인 API 테스트"""
+        login_data = {
+            'email': self.user_data['email'],
+            'password': self.user_data['password']
+        }
+        response = self.client.post(reverse('users_noti_api:user_login'), login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)  # access token이 응답에 포함되어야 함
+        self.assertIn('refresh', response.data)  # refresh token이 응답에 포함되어야 함
+        
+        
+    def test_profile_delete(self):
+        """유저 프로필 삭제 API 테스트"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(reverse('users_noti_api:user_profile'))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+        # 삭제된 유저의 deleted_at 필드가 설정되었는지 확인
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.deleted_at)
+
+    def test_logout(self):
+        """로그아웃 API 테스트 (refresh token blacklist 등록)"""
+        # 로그인 후 refresh token을 받는다.
+        login_data = {
+            'email': self.user_data['email'],
+            'password': self.user_data['password']
+        }
+        login_response = self.client.post(reverse('users_noti_api:user_login'), login_data, format='json')
+        refresh_token = login_response.data['refresh']
+        
+        # 로그아웃 요청 전에 force_authenticate로 인증 처리
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {login_response.data["access"]}')
+
+        response = self.client.post(reverse('users_noti_api:user_logout'), {'refresh_token': refresh_token}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
