@@ -53,3 +53,57 @@ class TransactionModelTestCase(TestCase):
 
         self.assertEqual(account.account_number, '11223344')
         self.assertEqual(user.email, 'transaction_test3@test.com')
+
+    # 여러 개의 거래 내역이 생성되는 경우
+    def test_transaction_creation_multiple(self):
+        user = CustomUser.objects.create(
+            email="transaction_test4@test.com",
+            name="박유진4",
+            nickname="transaction_test4",
+            phone_number="01011112223",
+            password="qwer1234",
+        )
+
+        account = Account.objects.create(
+            account_number='22334455',
+            account_type="CHECKING",
+            user=user,
+        )
+
+        Transaction.objects.create(
+            trader=124,
+            transaction_amount=15000,
+            transaction_balance=35000,
+            transaction_details="급여 입금",
+            account=account,
+        )
+
+        objects_count = Transaction.objects.count()
+        self.assertEqual(objects_count, 2)
+
+    # 거래 내역의 기본값이 잘 설정되는지 확인 (기본값 필드)
+    def test_transaction_default_values(self):
+        transaction = Transaction.objects.first()
+
+        self.assertEqual(transaction.transaction_type, "DEPOSIT")  # 기본값 "DEPOSIT"
+        self.assertEqual(transaction.transaction_method, "ATM")  # 기본값 "ATM"
+
+    # 거래 내역에 연결된 모델(계좌, 유저) 삭제 후 거래 내역 확인
+    def test_transaction_related_model_delete(self):
+        transaction = Transaction.objects.first()
+        account = transaction.account
+        user = account.user
+
+        # 계좌 삭제
+        account.delete()
+
+        # 계좌가 삭제되었지만, 거래 내역이 존재하는지 확인
+        transaction_exists = Transaction.objects.filter(id=transaction.id).exists()
+        self.assertFalse(transaction_exists)
+
+        # 유저 삭제 후 거래 내역 확인
+        user.delete()
+
+        # 유저가 삭제되었을 때, 거래 내역도 삭제되었는지 확인
+        transaction_exists_after_user_delete = Transaction.objects.filter(id=transaction.id).exists()
+        self.assertFalse(transaction_exists_after_user_delete)
