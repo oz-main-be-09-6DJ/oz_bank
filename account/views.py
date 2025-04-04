@@ -1,22 +1,23 @@
 from django.shortcuts import render
-from rest_framework.generics import RetrieveUpdateDestroyAPIView,CreateAPIView,ListAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView,ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from account.models import Account
 from account.serializers import AccountCreateSerializer,AccountReadSerializer,AccountUpdateSerializer
+from rest_framework import status
+from rest_framework.response import Response
 
-class AccountCreateAPIView(CreateAPIView):#계좌 생성 API (로그인한 사용자만 가능)
-    serializer_class = AccountCreateSerializer
+class AccountListCreateAPIView(ListCreateAPIView):#계좌 생성 API (로그인한 사용자만 가능)
     permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        return Account.objects.filter(user=self.request.user)  # 본인 계좌만 조회
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AccountCreateSerializer
+        return AccountReadSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)#현재 로그인한 유저를 계좌 주인으로 설정
-
-class AccountListAPIView(ListAPIView):#원래 로그인한 사용자의 모든 계좌 조회 API
-    serializer_class = AccountReadSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):# 본인 계좌만 조회 가능하도록 오버로딩
-        return Account.objects.filter(user=self.request.user)
+        serializer.save(user=self.request.user)  # 계좌 생성 시 유저 자동 지정
 
 class AccountDetailAPIView(RetrieveUpdateDestroyAPIView):#한 계좌 조회, 수정, 삭제 API
     serializer_class = AccountReadSerializer  # 기본적으로 조회용 Serializer
@@ -29,3 +30,13 @@ class AccountDetailAPIView(RetrieveUpdateDestroyAPIView):#한 계좌 조회, 수
         if self.request.method in ['PUT', 'PATCH']:
             return AccountUpdateSerializer
         return AccountReadSerializer
+    def perform_destroy(self, instance):#본인 계좌만 삭제 가능하도록 설정, 잔액이 0원이어야 함
+        if instance.user != self.request.user:
+            return Response({"detail": "삭제 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+        if instance.balance > 0:
+            return Response({"detail": "잔액이 0원이 아닌 계좌는 삭제할 수 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+        instance.delete()
+    def delete(self, request, *args, **kwargs):#DELETE 요청 시 JSON 응답 반환 <--postman으로 해보니까 삭제되면 json안날라오길래 오버라이딩 했어요
+        account = self.get_object()
+        account.delete()
+        return Response({"message": "계좌가 성공적으로 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)

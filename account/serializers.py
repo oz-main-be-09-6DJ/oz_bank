@@ -14,6 +14,11 @@ class AccountCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("로그인이 필요합니다.")
         validated_data['user'] = request.user
         return super().create(validated_data)
+    def to_representation(self, instance):#Response의 user 필드에서 name만 포함하도록 수정
+        data = super().to_representation(instance)  # 기존 직렬화된 데이터 가져오기
+        if instance.user:  # user가 존재하는 경우
+            data['user'] = {'name': instance.user.name}  # user 필드에 name만 포함
+        return data
     
 class AccountReadSerializer(serializers.ModelSerializer):
     user=UserReadMeSerializer(read_only=True)
@@ -21,6 +26,11 @@ class AccountReadSerializer(serializers.ModelSerializer):
     class Meta:
         model=Account
         fields="__all__"
+    def to_representation(self, instance):#Response의 user 필드에서 name만 포함하도록 수정
+        data = super().to_representation(instance)  # 기존 직렬화된 데이터 가져오기
+        if instance.user:  # user가 존재하는 경우
+            data['user'] = {'name': instance.user.name}  # user 필드에 name만 포함
+        return data
         
 class AccountUpdateSerializer(serializers.ModelSerializer):
     class Meta:
