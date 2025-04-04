@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, serializers
+from account.models import Account
 from .models import Transaction
 from .serializers import TransactionSerializer
 from rest_framework.filters import OrderingFilter
@@ -19,20 +20,24 @@ class TransactionFilter(filters.FilterSet):
 
 
 # 거래 내역 리스트 조회 및 생성 API
+
 class TransactionListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Transaction.objects.all()  # 모든 거래 내역을 기본 쿼리셋으로 사용
-    serializer_class = TransactionSerializer  # 거래 내역을 직렬화할 Serializer 사용
-    permission_classes = [permissions.IsAuthenticated]  # 인증된 사용자만 접근 가능
-    filter_backends = (filters.DjangoFilterBackend, OrderingFilter)  # 필터링과 정렬 기능 활성화
-    filter_set_class = TransactionFilter  # 필터링 조건 설정
-    ordering_fields = ['created_date']  # 정렬 가능한 필드
-    ordering = ['-created_date']  # 기본적으로 최신 거래부터 정렬
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    # 거래 내역을 생성할 때 추가적인 필드를 처리하는 메소드
     def perform_create(self, serializer):
-        # 거래 내역을 생성할 때 로그인한 사용자의 ID를 'trader' 필드에 추가하여 저장
-        serializer.save(trader=self.request.user.id)
+        account_number = self.request.data.get('account_number')
+        if not account_number:
+            raise serializers.ValidationError({"account_number": "이 필드는 필수 항목입니다."})
 
+        try:
+            account = Account.objects.get(account_number=account_number, user=self.request.user)
+        except Account.DoesNotExist:
+            raise serializers.ValidationError({"account_number": "해당 계좌가 존재하지 않거나, 본인의 계좌가 아닙니다."})
+
+        # trader는 User 객체가 아닌 user.id (정수)로 넣기!
+        serializer.save(account=account, trader=self.request.user.id)
 
 # 거래 내역 조회, 수정, 삭제 API
 class TransactionRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
