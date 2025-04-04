@@ -22,6 +22,7 @@ print("BASE_DIR : ", BASE_DIR)
 # secret.json 로드
 SECRET = {}
 secret_path = BASE_DIR / '.config_secret' / 'secret.json'
+print("secret_path : ", secret_path)
 
 if secret_path.exists():
     try:
@@ -52,11 +53,12 @@ DJANGO_APPS = [
 ]
 
 APP_APPS = [
-    'users',
-    'transaction',
-    'analysis',
-    'account',
-    'core',
+    'apps.users',
+    'apps.transaction',
+    'apps.analysis',
+    'apps.account',
+    'apps.core',
+
     'storages',
 ]
 

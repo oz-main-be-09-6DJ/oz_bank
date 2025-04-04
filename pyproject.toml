@@ -1,10 +1,14 @@
 [project]
-name = "config" # startProject 로 설정한 이름을 넣어줌.
+name = "apps" # startProject 로 설정한 이름을 넣어줌.
 version = "0.1.0"
 description = ""
 authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
+
+# 아래 줄을 명시적으로 추가해 주세요!
+packages = [{ include = "apps" }]
+
 requires-python = ">=3.13"
 
 [tool.poetry.dependencies] # 기본 환경

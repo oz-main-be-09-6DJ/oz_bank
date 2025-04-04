@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')  # 배포 환경에서 prod 설정을 사용
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')  # 배포 환경에서 prod 설정을 사용
 
 application = get_wsgi_application()
