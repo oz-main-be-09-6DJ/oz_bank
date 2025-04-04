@@ -57,6 +57,7 @@ APP_APPS = [
     'analysis',
     'account',
     'core',
+    'storages',
 ]
 
 # Django에게 기본 User 모델 대신 CustomUser 사용하도록 설정
@@ -131,7 +132,37 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# Static, Media URL 수정
+STATIC_URL = f'https://{os.getenv("S3_STORAGE_BUCKET_NAME", "django-mini-project")}.s3.amazonaws.com/static/'
+MEDIA_URL = f'https://{os.getenv("S3_STORAGE_BUCKET_NAME", "django-mini-project")}.s3.amazonaws.com/media/'
+
+
+# STORAGES 작성
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.getenv("S3_ACCESS_KEY", ""),
+            "secret_key": os.getenv("S3_SECRET_ACCESS_KEY", ""),
+            "bucket_name": os.getenv("S3_STORAGE_BUCKET_NAME", ""),
+            "region_name": os.getenv("S3_REGION_NAME", ""),
+            "location": "media",
+            "default_acl": "public-read",
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.getenv("S3_ACCESS_KEY", ""),
+            "secret_key": os.getenv("S3_SECRET_ACCESS_KEY", ""),
+            "bucket_name": os.getenv("S3_STORAGE_BUCKET_NAME", ""),
+            "region_name": os.getenv("S3_REGION_NAME", ""),
+            "custom_domain": f'{os.getenv("S3_STORAGE_BUCKET_NAME", "")}.s3.amazonaws.com',
+            "location": "static",
+            "default_acl": "public-read",
+        },
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
