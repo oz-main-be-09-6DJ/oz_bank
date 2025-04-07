@@ -30,9 +30,9 @@ WORKDIR /oz_bank/apps
 RUN mkdir -p /oz_bank && chmod -R 755 /oz_bank
 
 # 기존 코드: 직접 gunicorn 사용해서 실행
-#CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]
 
 # 변경된 코드: 스크립트를 사용하여 애플리케이션 실행
-COPY ./scripts /scripts
-RUN chmod +x /scripts/run.sh
-CMD ["/scripts/run.sh"]
+#COPY ./scripts /scripts
+#RUN chmod +x /scripts/run.sh
+#CMD ["/scripts/run.sh"]
