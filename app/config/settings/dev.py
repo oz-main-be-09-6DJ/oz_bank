@@ -1,5 +1,4 @@
 from .base import *
-
 # DEBUG 설정 (개발 환경에서는 보통 True로 설정)
 DEBUG = os.getenv("DEBUG", default=True)
 
@@ -22,7 +21,7 @@ ROOT_URLCONF = "config.urls.urls_dev"
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.naver.com"
-EMAIL_USE_TLS = True    # 보안 연결(TLS)용으로 EMAIL_PORT 연결과 관련
+EMAIL_USE_TLS = False    # 보안 연결(TLS)용으로 EMAIL_PORT 연결과 관련
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("USER_ID")
 EMAIL_HOST_PASSWORD = os.getenv("PASSWORD")

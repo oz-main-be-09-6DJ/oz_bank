@@ -15,9 +15,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
 
+load_dotenv()
 # 프로젝트 루트 경로
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 print("BASE_DIR : ", BASE_DIR)
+print("🔥 DB HOST =", os.getenv('DB_HOST'))
 
 # secret.json 로드
 SECRET = {}
@@ -49,6 +51,7 @@ DJANGO_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'rest_framework',
+    'storages',
 ]
 
 APP_APPS = [

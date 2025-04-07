@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')  # 로컬 개발 환경을 사용
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')  # 로컬 개발 환경을 사용
 
     try:
         from django.core.management import execute_from_command_line

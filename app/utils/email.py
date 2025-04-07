@@ -19,4 +19,8 @@ def send_verification_email(user):
     from_email = settings.EMAIL_HOST_USER
     recipient_list = [user.email]
 
-    send_mail(subject, message, from_email, recipient_list)
+    try:
+        send_mail(subject, message, from_email, recipient_list)
+    except Exception as e:
+        print(repr(e))
+        raise
