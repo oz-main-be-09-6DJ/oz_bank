@@ -1,5 +1,5 @@
 [project]
-name = "apps" # startProject 로 설정한 이름을 넣어줌.
+name = "app" # startProject 로 설정한 이름을 넣어줌.
 version = "0.1.0"
 description = ""
 authors = [
@@ -10,6 +10,7 @@ authors = [
 packages = [{ include = "apps" }]
 
 requires-python = ">=3.13"
+
 
 [tool.poetry.dependencies] # 기본 환경
 django = ">=5.1.7,<6.0.0"
@@ -22,7 +23,8 @@ djangorestframework-simplejwt = "^5.5.0"
 requests = "^2.32.3"
 django-filter = "^25.1"
 django-storages = "^1.14.6"
-boto3 = "^1.37.27"
+boto3 = "^1.37.28"
+certifi = "^2025.1.31"
 
 [tool.poetry.group.prod.dependencies] # 배포 환경
 isort = "^6.0.1"    # import를 알파벳 순으로 자동 정렬
